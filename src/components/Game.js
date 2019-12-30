@@ -10,18 +10,37 @@ const { Title } = Typography;
 }))
 class Game extends PureComponent {
 
+  //Generate Random number
   random = (e) => {
     if (e > 0) {
       let Newrandom = Math.floor(1 + Math.random() * (e - 1));
-      console.log(Newrandom);
-      this.props.dispatch({ type: 'guess/fetch', payload: { Newrandom } });
-
+      this.props.dispatch({ type: 'guess/fetch', payload: Newrandom });
     }
   }
-  
-  render() {
 
-    console.log('props', this.props.guess.count.number);
+  //get value of user guessed  
+  changeDone = (e) => {
+    console.log(e);
+    this.props.dispatch({ type: 'guess/comp', payload: e });
+  }
+
+  //Compare random number to user guessed number
+
+  checkNumberHandler = (e) => {
+    e.preventDefault();
+    console.log(this.props.guess.count);
+    this.props.guess.count === this.props.guess.guessedNo
+      ?
+      alert('Congratulation You guessed the number ')
+      :
+      this.props.guess.count < this.props.guess.guessedNo
+        ?
+        alert('You guessed Big Number')
+        :
+        alert('You guessed Small  Number')
+  }
+  render() {
+    console.log(this.props.guess.count);
     return (
 
       <Layout style={{ textAlign: 'center', height: '100%' }}>
@@ -29,18 +48,18 @@ class Game extends PureComponent {
           <Title level={2} style={{ color: 'white', lineHeight: '2' }}>Guess The Number</Title>
         </Header>
         <Content style={{ display: 'flex', flexDirection: 'column', padding: '2rem' }}>
-          <h1>{this.props.guess.count}</h1>
+          <h1>{this.props.guess.state}</h1>
           <div>
-            <Button type="primary" onClick={() => this.random(500)} >Easy</Button>
-            <Button >Medium</Button>
-            <Button type="primary" >Hard</Button>
+            <Button type="primary" onClick={() => this.random(100)} >Easy</Button>
+            <Button onClick={() => this.random(500)} >Medium</Button>
+            <Button type="primary" onClick={() => this.random(1000)}>Hard</Button>
 
           </div>
-          <Card title="Guess number between 1 to " bordered={false} style={{ width: 500, alignSelf: 'center', margin: '2rem' }}>
-            <Form className="login-form" >
-              <InputNumber min={1} placeholder='Enter number' type='number' style={{ width: '200px' }} />
-            </Form>
-            <Button type="primary" htmlType="submit" style={{ margin: '0.5rem' }}>
+          <Card title="Guess the  number " bordered={false} style={{ width: 500, alignSelf: 'center', margin: '2rem' }}>
+
+            <InputNumber min={1} placeholder='Enter number' type='number' style={{ width: '200px' }} onChange={this.changeDone} disabled={this.props.guess.enable} />
+
+            <Button type="primary" style={{ margin: '0.5rem' }} onClick={this.checkNumberHandler} >
               Guess
             </Button>
           </Card>

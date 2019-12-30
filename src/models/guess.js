@@ -2,35 +2,34 @@
 export default {
     namespace: 'guess',
     state: {
-        count: 0
+        count: 0,
+        guessedNo: null,
+        enable: true,
     },
 
     effects: {
-        *fetch(action, { put }) {  // eslint-disable-line
-            console.log("inside effects");
-            const randomNumber = action.payload.Newrandom;
-            yield put({ type: 'change', payload: { randomNumber } });
-
+        *fetch(payload, { put }) {  // eslint-disable-line
+            yield put({ type: 'change', payload });
         },
+        *comp(payload, { put }) {
+            yield put({ type: 'guessed', payload })
+        }
     },
     reducers: {
-        change(state, payload) {
-            console.log(state.count);
-            console.log(payload);
+        change(count, { payload }) {
             return {
-                ...state.count,
-                count: {
-                    ...state.count,
-                    number: payload.payload.randomNumber,
-
-                },
-
+                ...count,
+                count: payload.payload,
+                enable: false,
             };
-
-
-        }
-
+        },
+        guessed(guessedNo, { payload }) {
+            return {
+                ...guessedNo,
+                guessedNo: payload.payload,
+            };
+        },
     }
-
-
 }
+
+
